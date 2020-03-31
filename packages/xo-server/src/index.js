@@ -16,6 +16,7 @@ import serveStatic from 'serve-static'
 import stoppable from 'stoppable'
 import WebServer from 'http-server-plus'
 import WebSocket from 'ws'
+import Zone from 'node-zone'
 import { forOwn, map, once } from 'lodash'
 import { URL } from 'url'
 
@@ -251,14 +252,21 @@ async function setUpPassport(express, xo, { authentication: authCfg }) {
 
   // Install the local strategy.
   xo.registerPassportStrategy(
-    new LocalStrategy(async (username, password, done) => {
-      try {
-        const { user } = await xo.authenticateUser({ username, password })
-        done(null, user)
-      } catch (error) {
-        done(null, false, { message: error.message })
+    new LocalStrategy(
+      { passReqToCallback: true },
+      async (req, username, password, done) => {
+        const zone = Zone.current.fork('webAuthentication')
+        zone.data.userIp = req.socket.remoteAddress
+        try {
+          const { user } = await zone.run(() =>
+            xo.authenticateUser({ username, password })
+          )
+          done(null, user)
+        } catch (error) {
+          done(null, false, { message: error.message, username })
+        }
       }
-    })
+    )
   )
 }
 
