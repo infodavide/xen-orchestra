@@ -11,7 +11,7 @@
   - Remove 'Migrate all VDIs' checkbox (PR [#4876](https://github.com/vatesfr/xen-orchestra/pull/4876))
   - [VM/disks]: Add bulk migration (PR [#4877](https://github.com/vatesfr/xen-orchestra/pull/4877))
 - [Backup/run backup] confirmation modal: show the number of VMs will backed up (PR [#4875](https://github.com/vatesfr/xen-orchestra/pull/4875))
-
+- [Backup/run backup] Confirmation modal: show the number of VMs will backed up (PR [#4875](https://github.com/vatesfr/xen-orchestra/pull/4875))
 ### Bug fixes
 
 > Users must be able to say: “I had this issue, happy to know it's fixed”
